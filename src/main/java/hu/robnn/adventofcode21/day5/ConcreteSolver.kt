@@ -1,20 +1,28 @@
 package hu.robnn.adventofcode21.day5
 
-import hu.robnn.adventofcode21.Reader
+import hu.robnn.adventofcode21.Solver
 
 
 fun main() {
-    val five = Five()
-    println(five.calcOverlappingLinePoints())
-    println(five.calcOverlappingLinePoints(true))
+    val concreteSolver = ConcreteSolver()
+    concreteSolver.printSolved()
 }
 
 
-class Five {
+class ConcreteSolver: Solver {
 
-    fun calcOverlappingLinePoints(getDiagonals: Boolean = false): Int {
-        val reader = Reader()
-        val overlappingCoordinates = reader.readLines("day5_input1.txt").map { it.split(" -> ")
+    override fun solvePart1(): String {
+        return calcOverlappingLinePoints().toString()
+    }
+
+    override fun solvePart2(): String {
+        return calcOverlappingLinePoints(true).toString()
+    }
+
+    override fun getInputName() = "day5_input1.txt"
+
+    private fun calcOverlappingLinePoints(getDiagonals: Boolean = false): Int {
+        val overlappingCoordinates = readInput().map { it.split(" -> ")
                 .map { it.split(",") }}.map { getLineElements(it, getDiagonals) }
                 .filter { it.isNotEmpty() }.flatten().groupBy { it }.filter { it.value.size >= 2 }
         return overlappingCoordinates.size

@@ -1,19 +1,16 @@
 package hu.robnn.adventofcode21.day4
 
-import hu.robnn.adventofcode21.Reader
+import hu.robnn.adventofcode21.Solver
 import hu.robnn.adventofcode21.transpose
 
 
 fun main() {
-    val four = Four()
-    val (firstWinnerNum, firstUnmarked) = four.calcBingo(true)
-    val (lastWinnerNum, lastUnmarked) = four.calcBingo(false)
-    println(firstWinnerNum * firstUnmarked.reduce {a, b -> a+b })
-    println(lastWinnerNum * lastUnmarked.reduce {a, b -> a+b })
+    val concreteSolver = ConcreteSolver()
+    concreteSolver.printSolved()
 }
 
 
-class Four {
+class ConcreteSolver: Solver {
     class BoardNumber(val num: Int,
                       var marked: Boolean)
 
@@ -33,9 +30,20 @@ class Four {
                 numbersInColumns.map { it.filter { !it.marked }.map { it.num } }.flatten()
     }
 
-    fun calcBingo(firstWinningBoard: Boolean): Pair<Int, List<Int>> {
-        val reader = Reader()
-        val lines = reader.readLines("day4_input1.txt")
+    override fun solvePart1(): String {
+        val (firstWinnerNum, firstUnmarked) = calcBingo(true)
+        return (firstWinnerNum * firstUnmarked.reduce {a, b -> a+b }).toString()
+    }
+
+    override fun solvePart2(): String {
+        val (lastWinnerNum, lastUnmarked) = calcBingo(false)
+        return (lastWinnerNum * lastUnmarked.reduce {a, b -> a+b }).toString()
+    }
+
+    override fun getInputName() = "day4_input1.txt"
+
+    private fun calcBingo(firstWinningBoard: Boolean): Pair<Int, List<Int>> {
+        val lines = readInput()
         val numbers = lines[0].split(",").map { it.toInt() }
 
         val matrices = lines.drop(2).joinToString().split(", ,").map { it.split(",")
@@ -65,5 +73,4 @@ class Four {
             winningBoards.last()
         }
     }
-
 }

@@ -1,23 +1,20 @@
 package hu.robnn.adventofcode21.day1
 
-import hu.robnn.adventofcode21.Reader
+import hu.robnn.adventofcode21.Solver
 
 fun main() {
-    val one = One()
-    println(one.calcIncrease())
-    println(one.calcIncreaseWithSlidingWindow())
+    val concreteSolver = ConcreteSolver()
+    concreteSolver.printSolved()
 }
 
-class One {
-    fun calcIncrease(): Int {
-        val reader = Reader()
-        val depths = reader.readLines("day1_input1.txt").map { it.toInt() }
-        return countIncrease(depths)
+class ConcreteSolver: Solver {
+    override fun solvePart1(): String {
+        val depths = readInput().map { it.toInt() }
+        return countIncrease(depths).toString()
     }
 
-    fun calcIncreaseWithSlidingWindow(): Int {
-        val reader = Reader()
-        val depths = reader.readLines("day1_input1.txt").map { it.toInt() }
+    override fun solvePart2(): String {
+        val depths = readInput().map { it.toInt() }
         val windows = mutableListOf<Int>()
         for (i in depths.indices) {
             if (i < depths.size - 2)
@@ -27,8 +24,10 @@ class One {
             else if (i < depths.size)
                 windows.add(depths[i])
         }
-        return countIncrease(windows)
+        return countIncrease(windows).toString()
     }
+
+    override fun getInputName() = "day1_input1.txt"
 
     private fun countIncrease(depths: List<Int>): Int {
         var counter = 0

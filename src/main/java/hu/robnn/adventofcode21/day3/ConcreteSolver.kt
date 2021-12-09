@@ -1,22 +1,18 @@
 package hu.robnn.adventofcode21.day3
 
-import hu.robnn.adventofcode21.Reader
+import hu.robnn.adventofcode21.Solver
 import java.util.regex.Pattern
 
 
 fun main() {
-    val three = Three()
-    val (gamma, epsilon) = three.calcGammaAndEpsilon()
-    val (oxygen, component2) = three.calcOxygenAndCo2()
-    println(gamma * epsilon)
-    println(oxygen * component2)
+    val concreteSolver = ConcreteSolver()
+    concreteSolver.printSolved()
 }
 
 
-class Three {
-    fun calcGammaAndEpsilon(): Pair<Int, Int> {
-        val reader = Reader()
-        val bits = reader.readLines("day3_input1.txt").map { it.chunked(1) }
+class ConcreteSolver: Solver {
+    override fun solvePart1(): String {
+        val bits = readInput().map { it.chunked(1) }
         // transpose the list
         val transposed = transposeList(bits)
         val gammaChars = transposed.map {
@@ -25,19 +21,20 @@ class Three {
         val epsilon = gammaChars.joinToString("") { if (it == "1") "0" else "1" } // epsilon is the inverse of gamma
         val gamma = gammaChars.joinToString("")
 
-        return gamma.toInt(2) to epsilon.toInt(2)
+        return (gamma.toInt(2) * epsilon.toInt(2)).toString()
     }
 
-    fun calcOxygenAndCo2(): Pair<Int, Int> {
-        val reader = Reader()
-        val bits = reader.readLines("day3_input1.txt").map { it.chunked(1) }
+    override fun solvePart2(): String {
+        val bits = readInput().map { it.chunked(1) }
         // transpose the list
         val transposed = transposeList(bits)
         val oxygen = recursiveRemove(0, transposed, "1", true).joinToString("").toInt(2)
         val co2 = recursiveRemove(0, transposed, "0", false).joinToString("").toInt(2)
 
-        return oxygen to co2
+        return (oxygen * co2).toString()
     }
+
+    override fun getInputName() = "day3_input1.txt"
 
     private fun recursiveRemove(idx: Int, transposed: List<String>, ifEquals: String, mostCommon: Boolean): List<String> {
         val currentString = transposed[idx]
